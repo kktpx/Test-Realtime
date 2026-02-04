@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Security Monitor</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background-color: #f0f2f5; padding-top: 50px; }
+        .card {
+            background: white; width: 60%; margin: auto; padding: 40px;
+            border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        #status-box {
+            padding: 20px; font-size: 24px; font-weight: bold; color: white;
+            border-radius: 10px; margin-top: 20px; transition: 0.3s;
+        }
+        .normal { background-color: #28a745; } /* สีเขียว */
+        .danger { background-color: #dc3545; } /* สีแดง */
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>🛡️ AI Real-time IDS</h1>
+        <p>สถานะความปลอดภัยปัจจุบัน:</p>
+        
+        <div id="status-box" class="normal">
+            ✅ Waiting for data...
+        </div>
+        
+        <p style="margin-top: 20px; color: gray;">Last Update: <span id="time">--:--:--</span></p>
+    </div>
+
+    <script>
+        function updateStatus() {
+            fetch('/api/status')  // ไปถาม Server
+                .then(response => response.json())
+                .then(data => {
+                    const box = document.getElementById('status-box');
+                    const timeSpan = document.getElementById('time');
+                    
+                    // อัปเดตข้อความ
+                    box.innerText = data.result;
+                    timeSpan.innerText = new Date().toLocaleTimeString();
+
+                    // เปลี่ยนสีกล่อง
+                    if (data.result.includes("Attack")) {
+                        box.className = "danger"; // สีแดง
+                    } else {
+                        box.className = "normal"; // สีเขียว
+                    }
+                })
+                .catch(err => console.error('Error:', err));
+        }
+
+        // สั่งให้ทำงานทุกๆ 1 วินาที (1000 ms)
+        setInterval(updateStatus, 1000);
+    </script>
+
+</body>
+</html>
