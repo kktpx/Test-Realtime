@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Security Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f7f6;
+            transition: background-color 0.5s ease;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 400px;
+            transition: transform 0.3s;
+        }
+
+        .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        h1 { margin: 0; font-size: 24px; color: #333; }
+        p { color: #666; margin-top: 10px; }
+
+        .status-box {
+            margin-top: 30px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 20px;
+            color: white;
+            background-color: #28a745; /* สีเขียวเริ่มต้น */
+            transition: all 0.3s ease;
+        }
+
+        /* Mode แดงเดือด */
+        body.danger-mode {
+            background-color: #ffcccc;
+        }
+        .danger-mode .card {
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(220, 53, 69, 0.4);
+        }
+        .danger-mode .status-box {
+            background-color: #dc3545; /* สีแดง */
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="main-card">
+        <div class="icon" id="status-icon">🛡️</div>
+        <h1>AI Web Firewall</h1>
+        <p>Real-time Log Analysis with Machine Learning</p>
+
+        <div id="status-box" class="status-box">
+            ✅ Normal Traffic
+        </div>
+        
+        <p style="font-size: 12px; margin-top: 20px;">AI Confidence: <span id="confidence">100%</span></p>
+    </div>
+
+    <script>
+        // เชื่อมต่อกับ Server ผ่าน Socket.IO
+        const socket = io();
+
+        // รอฟังคำสั่ง 'update_status' จาก Server
+        socket.on('update_status', function(data) {
+            console.log("Alert Received:", data);
+
+            const body = document.body;
+            const statusBox = document.getElementById('status-box');
+            const statusIcon = document.getElementById('status-icon');
+            const mainCard = document.getElementById('main-card');
+
+            // อัปเดตข้อความ
+            statusBox.innerText = data.message;
+            
+            if (data.status === 'Danger') {
+                // เปลี่ยนเป็นสีแดง
+                body.classList.add('danger-mode');
+                statusBox.style.backgroundColor = data.color;
+                statusIcon.innerText = "🚨";
+            } else {
+                // กลับเป็นปกติ (เผื่อมีปุ่ม Reset)
+                body.classList.remove('danger-mode');
+                statusBox.style.backgroundColor = '#28a745';
+                statusIcon.innerText = "🛡️";
+            }
+        });
+    </script>
+</body>
+</html>

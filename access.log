@@ -1,0 +1,165 @@
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.1.108:8080
+[33mPress CTRL+C to quit[0m
+GET /login?user=somsri&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:32:15] "GET /login?user=somsri&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' OR '1'='1&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:32:20] "GET /login?user='%20OR%20'1'='1&pass=1234 HTTP/1.1" 200 -
+GET /login?user=admin&pass=<script>alert('pwned')</script>
+127.0.0.1 - - [05/Feb/2026 18:32:33] "GET /login?user=admin&pass=<script>alert('pwned')</script> HTTP/1.1" 200 -
+GET /login?user=guest&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:32:39] "GET /login?user=guest&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' UNION SELECT 1,2,3 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:32:47] "GET /login?user='%20UNION%20SELECT%201,2,3%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass=<img src=x onerror=alert(1)>
+127.0.0.1 - - [05/Feb/2026 18:32:56] "GET /login?user=user&pass=<img%20src=x%20onerror=alert(1)> HTTP/1.1" 200 -
+GET /login?user=admin&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:32:57] "GET /login?user=admin&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' UNION SELECT 1,2,3 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:32:58] "GET /login?user='%20UNION%20SELECT%201,2,3%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass="><script>alert(1)</script>
+127.0.0.1 - - [05/Feb/2026 18:32:59] "GET /login?user=user&pass="><script>alert(1)</script> HTTP/1.1" 200 -
+GET /login?user=guest&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:33:00] "GET /login?user=guest&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass=<script>alert('pwned')</script>
+127.0.0.1 - - [05/Feb/2026 18:33:01] "GET /login?user=user&pass=<script>alert('pwned')</script> HTTP/1.1" 200 -
+GET /login?user=' OR 1=1 LIMIT 1 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:33:02] "GET /login?user='%20OR%201=1%20LIMIT%201%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=somsri&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:33:03] "GET /login?user=somsri&pass=1234 HTTP/1.1" 200 -
+GET /login?user=guest&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:33:04] "GET /login?user=guest&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass="><script>alert(1)</script>
+127.0.0.1 - - [05/Feb/2026 18:33:05] "GET /login?user=user&pass="><script>alert(1)</script> HTTP/1.1" 200 -
+GET /login?user=' OR 1=1 LIMIT 1 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:33:06] "GET /login?user='%20OR%201=1%20LIMIT%201%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass="><script>alert(1)</script>
+127.0.0.1 - - [05/Feb/2026 18:33:07] "GET /login?user=user&pass="><script>alert(1)</script> HTTP/1.1" 200 -
+GET /login?user=somchai&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:33:08] "GET /login?user=somchai&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass=<script>alert('pwned')</script>
+127.0.0.1 - - [05/Feb/2026 18:33:09] "GET /login?user=user&pass=<script>alert('pwned')</script> HTTP/1.1" 200 -
+GET /login?user=somchai&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:33:10] "GET /login?user=somchai&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass=javascript:alert(1)
+127.0.0.1 - - [05/Feb/2026 18:33:11] "GET /login?user=user&pass=javascript:alert(1) HTTP/1.1" 200 -
+GET /login?user=user&pass=javascript:alert(1)
+127.0.0.1 - - [05/Feb/2026 18:33:12] "GET /login?user=user&pass=javascript:alert(1) HTTP/1.1" 200 -
+GET /login?user=' OR '1'='1&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:33:13] "GET /login?user='%20OR%20'1'='1&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' UNION SELECT 1,2,3 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:09] "GET /login?user='%20UNION%20SELECT%201,2,3%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' UNION SELECT 1,2,3 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:20] "GET /login?user='%20UNION%20SELECT%201,2,3%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' UNION SELECT 1,2,3 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:21] "GET /login?user='%20UNION%20SELECT%201,2,3%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' OR '1'='1&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:22] "GET /login?user='%20OR%20'1'='1&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' OR 1=1 LIMIT 1 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:22] "GET /login?user='%20OR%201=1%20LIMIT%201%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' UNION SELECT 1,2,3 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:22] "GET /login?user='%20UNION%20SELECT%201,2,3%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' OR 1=1 LIMIT 1 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:22] "GET /login?user='%20OR%201=1%20LIMIT%201%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' UNION SELECT 1,2,3 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:22] "GET /login?user='%20UNION%20SELECT%201,2,3%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' OR 1=1 LIMIT 1 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:22] "GET /login?user='%20OR%201=1%20LIMIT%201%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' UNION SELECT 1,2,3 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:23] "GET /login?user='%20UNION%20SELECT%201,2,3%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=admin&pass=<script>alert('pwned')</script>
+127.0.0.1 - - [05/Feb/2026 18:39:28] "GET /login?user=admin&pass=<script>alert('pwned')</script> HTTP/1.1" 200 -
+GET /login?user=user&pass=<img src=x onerror=alert(1)>
+127.0.0.1 - - [05/Feb/2026 18:39:32] "GET /login?user=user&pass=<img%20src=x%20onerror=alert(1)> HTTP/1.1" 200 -
+GET /login?user=admin&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:33] "GET /login?user=admin&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' OR '1'='1&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:34] "GET /login?user='%20OR%20'1'='1&pass=1234 HTTP/1.1" 200 -
+GET /login?user=admin&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:35] "GET /login?user=admin&pass=1234 HTTP/1.1" 200 -
+GET /login?user=guest&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:36] "GET /login?user=guest&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass=<script>alert('pwned')</script>
+127.0.0.1 - - [05/Feb/2026 18:39:37] "GET /login?user=user&pass=<script>alert('pwned')</script> HTTP/1.1" 200 -
+GET /login?user=' OR 1=1 LIMIT 1 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:38] "GET /login?user='%20OR%201=1%20LIMIT%201%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' OR 1=1 LIMIT 1 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:39] "GET /login?user='%20OR%201=1%20LIMIT%201%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=somsri&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:40] "GET /login?user=somsri&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass=<script>alert('pwned')</script>
+127.0.0.1 - - [05/Feb/2026 18:39:41] "GET /login?user=user&pass=<script>alert('pwned')</script> HTTP/1.1" 200 -
+GET /login?user=user&pass=<script>alert('pwned')</script>
+127.0.0.1 - - [05/Feb/2026 18:39:42] "GET /login?user=user&pass=<script>alert('pwned')</script> HTTP/1.1" 200 -
+GET /login?user=user&pass=<img src=x onerror=alert(1)>
+127.0.0.1 - - [05/Feb/2026 18:39:43] "GET /login?user=user&pass=<img%20src=x%20onerror=alert(1)> HTTP/1.1" 200 -
+GET /login?user=' OR 1=1 LIMIT 1 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:44] "GET /login?user='%20OR%201=1%20LIMIT%201%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=admin' --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:45] "GET /login?user=admin'%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass="><script>alert(1)</script>
+127.0.0.1 - - [05/Feb/2026 18:39:46] "GET /login?user=user&pass="><script>alert(1)</script> HTTP/1.1" 200 -
+GET /login?user=admin&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:47] "GET /login?user=admin&pass=1234 HTTP/1.1" 200 -
+GET /login?user=admin' --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:48] "GET /login?user=admin'%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' UNION SELECT 1,2,3 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:49] "GET /login?user='%20UNION%20SELECT%201,2,3%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=guest&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:50] "GET /login?user=guest&pass=1234 HTTP/1.1" 200 -
+GET /login?user=admin' &pass=
+127.0.0.1 - - [05/Feb/2026 18:39:51] "GET /login?user=admin'%20 HTTP/1.1" 200 -
+GET /login?user=somchai&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:52] "GET /login?user=somchai&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass=<img src=x onerror=alert(1)>
+127.0.0.1 - - [05/Feb/2026 18:39:53] "GET /login?user=user&pass=<img%20src=x%20onerror=alert(1)> HTTP/1.1" 200 -
+GET /login?user=user&pass=<img src=x onerror=alert(1)>
+127.0.0.1 - - [05/Feb/2026 18:39:54] "GET /login?user=user&pass=<img%20src=x%20onerror=alert(1)> HTTP/1.1" 200 -
+GET /login?user=user&pass=<img src=x onerror=alert(1)>
+127.0.0.1 - - [05/Feb/2026 18:39:55] "GET /login?user=user&pass=<img%20src=x%20onerror=alert(1)> HTTP/1.1" 200 -
+GET /login?user=' OR 1=1 LIMIT 1 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:56] "GET /login?user='%20OR%201=1%20LIMIT%201%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass=<img src=x onerror=alert(1)>
+127.0.0.1 - - [05/Feb/2026 18:39:57] "GET /login?user=user&pass=<img%20src=x%20onerror=alert(1)> HTTP/1.1" 200 -
+GET /login?user=user&pass=<script>alert('pwned')</script>
+127.0.0.1 - - [05/Feb/2026 18:39:58] "GET /login?user=user&pass=<script>alert('pwned')</script> HTTP/1.1" 200 -
+GET /login?user=' OR '1'='1&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:39:59] "GET /login?user='%20OR%20'1'='1&pass=1234 HTTP/1.1" 200 -
+GET /login?user=somchai&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:40:00] "GET /login?user=somchai&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass=<script>alert('pwned')</script>
+127.0.0.1 - - [05/Feb/2026 18:40:01] "GET /login?user=user&pass=<script>alert('pwned')</script> HTTP/1.1" 200 -
+GET /login?user=somchai&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:40:02] "GET /login?user=somchai&pass=1234 HTTP/1.1" 200 -
+GET /login?user=somchai&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:40:03] "GET /login?user=somchai&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass=<img src=x onerror=alert(1)>
+127.0.0.1 - - [05/Feb/2026 18:40:04] "GET /login?user=user&pass=<img%20src=x%20onerror=alert(1)> HTTP/1.1" 200 -
+GET /login?user=user&pass=<script>alert('pwned')</script>
+127.0.0.1 - - [05/Feb/2026 18:40:05] "GET /login?user=user&pass=<script>alert('pwned')</script> HTTP/1.1" 200 -
+GET /login?user=somchai&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:40:06] "GET /login?user=somchai&pass=1234 HTTP/1.1" 200 -
+GET /login?user=' UNION SELECT 1,2,3 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:40:07] "GET /login?user='%20UNION%20SELECT%201,2,3%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=admin&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:40:08] "GET /login?user=admin&pass=1234 HTTP/1.1" 200 -
+GET /login?user=admin&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:40:09] "GET /login?user=admin&pass=1234 HTTP/1.1" 200 -
+GET /login?user=admin' --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:40:10] "GET /login?user=admin'%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass=javascript:alert(1)
+127.0.0.1 - - [05/Feb/2026 18:40:11] "GET /login?user=user&pass=javascript:alert(1) HTTP/1.1" 200 -
+GET /login?user=user&pass=<script>alert('pwned')</script>
+127.0.0.1 - - [05/Feb/2026 18:40:12] "GET /login?user=user&pass=<script>alert('pwned')</script> HTTP/1.1" 200 -
+GET /login?user=guest&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:40:13] "GET /login?user=guest&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass=<img src=x onerror=alert(1)>
+127.0.0.1 - - [05/Feb/2026 18:40:14] "GET /login?user=user&pass=<img%20src=x%20onerror=alert(1)> HTTP/1.1" 200 -
+GET /login?user=' UNION SELECT 1,2,3 --&pass=1234
+127.0.0.1 - - [05/Feb/2026 18:40:15] "GET /login?user='%20UNION%20SELECT%201,2,3%20--&pass=1234 HTTP/1.1" 200 -
+GET /login?user=user&pass="><script>alert(1)</script>
+127.0.0.1 - - [05/Feb/2026 18:40:16] "GET /login?user=user&pass="><script>alert(1)</script> HTTP/1.1" 200 -
+GET /login?user=user&pass=<img src=x onerror=alert(1)>
+127.0.0.1 - - [05/Feb/2026 18:40:17] "GET /login?user=user&pass=<img%20src=x%20onerror=alert(1)> HTTP/1.1" 200 -

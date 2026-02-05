@@ -1,40 +1,41 @@
-import time  # <--- 1. อย่าลืม import time
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, render_template, request, jsonify
+from flask_socketio import SocketIO, emit
+import logging
+
+# ปิด Log จุกจิกของ Flask
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 app = Flask(__name__)
-
-# ตัวแปรเก็บเวลาล่าสุดที่เจอโจมตี
-last_attack_time = 0
-attack_cooldown = 3.0  # ให้โชว์ค้างไว้อย่างน้อย 3 วินาที
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
 def index():
-    return render_template('dashboard.html')
+    return render_template('index.html')
 
 @app.route('/api/predict', methods=['POST'])
-def receive_data():
-    global last_attack_time
+def predict():
     data = request.json
     
-    # ถ้าเจอ Count สูงๆ (ที่เราจำลองไว้ใน Agent ตอนเจอ Ping)
-    if data.get('count', 0) > 100:
-        last_attack_time = time.time() # จดเวลาที่เจอโจมตีไว้
-        current_status = "⚠️ Neptune (DoS Attack) Detected!"
-    else:
-        current_status = "✅ Normal Traffic"
+    # --- 🤖 ส่วนที่เพิ่มมา: รองรับผลลัพธ์จาก AI Agent ---
+    if 'attack_type' in data and data['attack_type'] != "Normal":
+        attack_name = data['attack_type']
+        print(f"🔥 Dashboard Alert: {attack_name}")
         
-    # ไม่ต้อง return status กลับไปที่ Agent ก็ได้ เพื่อความรวดเร็ว
-    return jsonify({'result': 'received'})
+        # ส่งไปหน้าเว็บให้เด้งสีแดงพร้อมชื่อท่า
+        socketio.emit('update_status', {
+            'status': 'Danger',
+            'message': f"{attack_name} Detected!",
+            'color': '#dc3545'  # สีแดง
+        })
+        return jsonify({'result': 'AI Alert Received'})
+    # ------------------------------------------------
 
-@app.route('/api/status', methods=['GET'])
-def get_status():
-    global last_attack_time
-    
-    # คำนวณเวลา: ถ้าเพิ่งเจอโจมตีไปไม่ถึง 3 วินาที ให้บังคับโชว์ว่า Attack
-    if (time.time() - last_attack_time) < attack_cooldown:
-        return jsonify({'result': "⚠️ Neptune (DoS Attack) Detected!"})
-    else:
-        return jsonify({'result': "✅ Normal Traffic"})
+    # (Logic เดิมสำหรับ Neptune/DoS ปล่อยไว้เหมือนเดิมก็ได้ หรือจะลบออกถ้าไม่ใช้แล้ว)
+    return jsonify({'result': 'Normal'})
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # รันที่ Port 5000 (ศูนย์บัญชาการ)
+    print("🏢 Dashboard Server running on port 5000...")
+    socketio.run(app, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)
