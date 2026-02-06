@@ -1,51 +1,116 @@
-import joblib
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.pipeline import make_pipeline
+import joblib
 
-# 1. สร้าง Dataset จำลอง (Data สำหรับสอน AI)
-# เราสอนมันว่าหน้าตาแบบไหนคือ Normal, SQLi, หรือ XSS
+# 1. Dataset (รวมมิตร Normal + Advanced SQLi + Advanced XSS)
 data = [
-    # --- Normal Traffic (คนดี) ---
-    ("GET /login?user=admin&pass=1234", "Normal"),
+    # ==========================================
+    # ✅ Normal Traffic
+    # ==========================================
+    ("GET /login?user=admin", "Normal"),
+    ("GET /login?user=somchai", "Normal"),
+    ("GET /login?user=somsri", "Normal"),
+    ("GET /login?user=manop", "Normal"),
+    ("GET /login?user=pranee", "Normal"),
+    ("GET /login?user=guest", "Normal"),
+    ("GET /login?user=tester", "Normal"),
     ("GET /home", "Normal"),
     ("GET /contact", "Normal"),
-    ("POST /api/data", "Normal"),
-    ("GET /images/logo.png", "Normal"),
-    ("GET /style.css", "Normal"),
-    ("LOGIN_ATTEMPT | User: somchai | Pass: 123456", "Normal"),
+    ("GET /products/view?id=105", "Normal"),
+    ("GET /news?category=sport", "Normal"),
+    ("GET /search?q=notebook", "Normal"),
+    ("GET /search?q=hello world", "Normal"),
+    ("GET /assets/css/style.css", "Normal"),
+    ("GET /js/app.js", "Normal"),
+    ("GET /", "Normal"),
+
+    # ==========================================
+    # 💉 SQL Injection
+    # ==========================================
     
-    # --- SQL Injection (โจรเจาะฐานข้อมูล) ---
+    # --- Auth Bypass ---
     ("GET /login?user=' OR '1'='1", "SQL Injection"),
+    ("GET /login?user=admin' OR 1=1 --", "SQL Injection"),
+    ("GET /login?user=' OR 1=1 #", "SQL Injection"),
     ("GET /login?user=admin' --", "SQL Injection"),
-    ("UNION SELECT table_name FROM information_schema.tables", "SQL Injection"),
-    ("SELECT * FROM users WHERE name = '' OR '1'='1'", "SQL Injection"),
-    ("LOGIN_ATTEMPT | User: ' OR 1=1 -- | Pass: ", "SQL Injection"),
+    ("GET /login?user=' OR TRUE --", "SQL Injection"),
     
-    # --- XSS Attack (โจรฝังโค้ด) ---
-    ("<script>alert('Hacked')</script>", "XSS Attack"),
-    ("GET /search?q=<script>document.cookie</script>", "XSS Attack"),
+    # --- Union Based ---
+    ("GET /login?user=UNION SELECT 1,2,3 --", "SQL Injection"),
+    ("GET /login?user=UNION ALL SELECT table_name, null FROM information_schema.tables", "SQL Injection"),
+    ("GET /login?user=' UNION SELECT user, password FROM users #", "SQL Injection"),
+    ("GET /login?user=UNION SELECT null, @@version --", "SQL Injection"),
+    
+    # --- Error Based / System Info ---
+    ("GET /login?user=SELECT version()", "SQL Injection"),
+    ("GET /login?user=SELECT user()", "SQL Injection"),
+    ("GET /login?user=SELECT database()", "SQL Injection"),
+    ("GET /login?user=@@datadir", "SQL Injection"),
+    ("GET /login?user=AND (SELECT 1 FROM", "SQL Injection"),
+    
+    # --- Time Based / Blind ---
+    ("GET /login?user=1' AND SLEEP(5) --", "SQL Injection"),
+    ("GET /login?user='; WAITFOR DELAY '0:0:5'--", "SQL Injection"),
+    ("GET /login?user=pg_sleep(10)", "SQL Injection"),
+    
+    # --- Stacked & Obfuscation ---
+    ("GET /login?user='; DROP TABLE users; --", "SQL Injection"),
+    ("GET /login?user='; EXEC xp_cmdshell('dir'); --", "SQL Injection"),
+    ("GET /login?user=1/**/OR/**/1=1", "SQL Injection"), # ใช้ comment แทน space
+    ("GET /login?user=UnIoN/**/SeLeCt", "SQL Injection"),
+
+    # ==========================================
+    # ☠️ XSS Attack
+    # ==========================================
+    
+    # --- Basic Tags ---
+    ("GET /login?user=<script>alert(1)</script>", "XSS Attack"),
+    ("GET /login?user=<SCRIPT>alert('XSS')</SCRIPT>", "XSS Attack"),
+    ("GET /login?user=<script src=http://evil.com/xss.js></script>", "XSS Attack"),
+    
+    # --- Event Handlers ---
+    ("GET /login?user=<img src=x onerror=alert(1)>", "XSS Attack"),
+    ("GET /login?user=<body onload=alert(1)>", "XSS Attack"),
+    ("GET /login?user=<input onfocus=alert(1) autofocus>", "XSS Attack"),
+    ("GET /login?user=<details ontoggle=alert(1)>", "XSS Attack"),
+    
+    # --- SVG & XML (หลบ WAF) ---
+    ("GET /login?user=<svg/onload=alert(1)>", "XSS Attack"),
+    ("GET /login?user=<svg><script>alert(1)</script>", "XSS Attack"),
+    ("GET /login?user=<math><mtext><option><fake><xmp><script>alert(1)</script>", "XSS Attack"),
+    
+    # --- Javascript URI ---
+    ("GET /login?user=javascript:alert(1)", "XSS Attack"),
+    ("GET /login?user=jaVasCript:alert(1)", "XSS Attack"),
+    ("GET /login?user=<a href='javascript:alert(1)'>Click</a>", "XSS Attack"),
+    
+    # --- Iframe & Object ---
+    ("GET /login?user=<iframe src=javascript:alert(1)>", "XSS Attack"),
+    
+    # --- Payloads ดิบๆ (เผื่อ Agent ตัด HTTP ออก) ---
+    ("<script>alert(1)</script>", "XSS Attack"),
     ("<img src=x onerror=alert(1)>", "XSS Attack"),
-    ("javascript:alert('XSS')", "XSS Attack"),
-    ("LOGIN_ATTEMPT | User: <script> | Pass: 1234", "XSS Attack")
+    ("javascript:alert(1)", "XSS Attack"),
+    ("SELECT version()", "SQL Injection"),
+    ("UNION SELECT", "SQL Injection")
 ]
 
-# แปลงเป็น DataFrame
-df = pd.DataFrame(data, columns=['text', 'label'])
+# 2. แปลงข้อมูล
+print("🧠 Training AI Model (Ultimate Edition)...")
+df = pd.DataFrame(data, columns=['request', 'type'])
 
-print("🧠 Training AI Model...")
+# ใช้ ngram_range=(1, 4) และ regex ที่จับอักขระพิเศษได้ดีเยี่ยม
+vectorizer = TfidfVectorizer(token_pattern=r'(?u)\b\w+\b|[^a-zA-Z0-9\s]', ngram_range=(1, 4)) 
+X = vectorizer.fit_transform(df['request'])
+y = df['type']
 
-# 2. สร้าง Pipeline (ท่อส่งข้อมูล)
-# - TfidfVectorizer: แปลงตัวหนังสือเป็นตัวเลข (AI อ่านหนังสือไม่ออก ต้องแปลงเป็น Vector)
-# - RandomForestClassifier: สมอง AI ที่ใช้จำแนกประเภท
-model = make_pipeline(TfidfVectorizer(), RandomForestClassifier())
+# 3. เทรนโมเดล
+model = RandomForestClassifier(n_estimators=200, random_state=42)
+model.fit(X, y)
 
-# 3. เริ่มสอน (Fit)
-model.fit(df['text'], df['label'])
-
-# 4. บันทึกสมองเก็บไว้ใช้งาน (Save Model)
+# 4. บันทึก
 joblib.dump(model, 'security_model.pkl')
+joblib.dump(vectorizer, 'vectorizer.pkl')
 
-print("✅ Model Trained & Saved as 'security_model.pkl'")
-print("Test Prediction ('<script>'):", model.predict(["<script>alert(1)</script>"])[0])
+print("✅ Model Trained & Saved! (Ready to catch EVERYTHING)")
